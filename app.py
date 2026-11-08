@@ -97,7 +97,10 @@ with evaluation_tab:
     output["malignant_probability"] = positive_probability(models[choice], features)
     st.download_button("Download predictions", output.to_csv(index=False), "predictions.csv", "text/csv")
 with comparison_tab:
-    st.dataframe(comparison.style.format("{:.4f}", na_rep="N/A"), width="stretch")
+    # Format a display copy without pandas Styler's optional Jinja2 dependency.
+    # Keep comparison numeric for charts and CSV downloads.
+    display_comparison = comparison.map(lambda value: "N/A" if pd.isna(value) else f"{value:.4f}")
+    st.dataframe(display_comparison, width="stretch")
     metric = st.selectbox("Metric to compare", list(comparison.columns), index=4)
     if comparison[metric].notna().any():
         st.bar_chart(comparison[[metric]])

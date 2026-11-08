@@ -3,7 +3,7 @@ import io
 import sys
 import unittest
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import patch, PropertyMock
 import joblib
 import numpy as np
 import pandas as pd
@@ -87,6 +87,25 @@ class IntegrationTests(unittest.TestCase):
         app.sidebar.checkbox[0].uncheck().run()
         self.assertFalse(app.exception)
         self.assertEqual(len(app.metric), 0)
+
+    def test_app_without_pandas_styler(self):
+        from streamlit.testing.v1 import AppTest
+        for label in [None, 1]:
+            frame = self.frame if label is None else self.frame[self.frame.target == label]
+            with self.subTest(label=label), patch.object(
+                pd.DataFrame, "style", new_callable=PropertyMock,
+                side_effect=AttributeError("The '.style' accessor requires jinja2")
+            ), patch("streamlit.delta_generator.DeltaGenerator.file_uploader",
+                     return_value=io.BytesIO(frame.to_csv(index=False).encode())):
+                app = AppTest.from_file(str(ROOT / "app.py"), default_timeout=60).run()
+                self.assertFalse(app.exception)
+                self.assertFalse(app.error)
+                table = app.dataframe[2].value
+                self.assertEqual(table.shape, (5, 6))
+                if label is not None:
+                    self.assertTrue((table["AUC"] == "N/A").all())
+                else:
+                    self.assertEqual(table.loc["Support Vector Machine", "Accuracy"], "1.0000")
 
     def test_app_upload_validation_and_single_class(self):
         from streamlit.testing.v1 import AppTest
