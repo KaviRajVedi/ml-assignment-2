@@ -88,6 +88,27 @@ class IntegrationTests(unittest.TestCase):
         self.assertFalse(app.exception)
         self.assertEqual(len(app.metric), 0)
 
+    def test_explorer_filters_do_not_change_evaluation(self):
+        from streamlit.testing.v1 import AppTest
+        app = AppTest.from_file(str(ROOT / "app.py"), default_timeout=60).run()
+        scores = [item.value for item in app.metric]
+        self.assertEqual(len(app.tabs), 5)
+        app.radio[0].set_value("Malignant only").run()
+        self.assertFalse(app.exception)
+        self.assertEqual([item.value for item in app.metric], scores)
+        table = next(item.value for item in app.dataframe if "Class" in item.value.columns)
+        self.assertEqual(len(table), 42)
+        self.assertTrue((table.target == 0).all())
+        app.multiselect[0].set_value([]).run()
+        self.assertFalse(app.exception)
+        table = next(item.value for item in app.dataframe if "Class" in item.value.columns)
+        self.assertEqual(list(table.columns), ["CSV row", "target", "Class"])
+        app.checkbox(key="only_errors").check().run()
+        self.assertFalse(app.exception)
+        mistakes = next(item.value for item in app.dataframe if "Predicted class" in item.value.columns)
+        self.assertEqual(len(mistakes), 2)
+        self.assertEqual([item.value for item in app.metric], scores)
+
     def test_app_without_pandas_styler(self):
         from streamlit.testing.v1 import AppTest
         for label in [None, 1]:
@@ -100,7 +121,7 @@ class IntegrationTests(unittest.TestCase):
                 app = AppTest.from_file(str(ROOT / "app.py"), default_timeout=60).run()
                 self.assertFalse(app.exception)
                 self.assertFalse(app.error)
-                table = app.dataframe[2].value
+                table = next(item.value for item in app.dataframe if item.value.shape == (5, 6) and "AUC" in item.value.columns)
                 self.assertEqual(table.shape, (5, 6))
                 if label is not None:
                     self.assertTrue((table["AUC"] == "N/A").all())
