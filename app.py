@@ -16,7 +16,7 @@ st.caption("Machine Learning Assignment 2 | Wisconsin Diagnostic dataset")
 st.info("Educational model comparison. Positive class: malignant (0); benign: 1. Not for clinical use.")
 st.markdown("Explore the dataset, compare five classifiers, and understand their predictions on held-out samples.")
 st.sidebar.title("Evaluation controls")
-choice = st.sidebar.selectbox("Classifier", list(MODEL_FILES))
+choice = st.selectbox("Classifier", list(MODEL_FILES), key="classifier", help="Choose the model shown in Model evaluation. The comparison includes all five models.")
 upload = st.sidebar.file_uploader("Upload test CSV (features + target)", type=["csv"])
 use_sample = st.sidebar.checkbox("Use bundled test data when no CSV is uploaded", value=True)
 bundled = ROOT / "test_data.csv"
@@ -102,7 +102,7 @@ with overview_tab:
     left, right = st.columns(2)
     with left:
         st.markdown("#### How to use this app")
-        st.markdown("1. Use the bundled test data or upload a labeled test CSV.\n2. Pick a classifier in the sidebar.\n3. Open **Model evaluation** for scores and mistakes.\n4. Use **Compare all five** to compare the same input rows.\n5. Inspect every sample in **Explore test data**.")
+        st.markdown("1. Use the bundled test data or upload a labeled test CSV.\n2. Pick a classifier using the dropdown above.\n3. Open **Model evaluation** for scores and mistakes.\n4. Use **Compare all five** to compare the same input rows.\n5. Inspect every sample in **Explore test data**.")
     with right:
         st.markdown("#### What the labels mean")
         st.write("**0 - Malignant:** the positive class for precision, recall, F1 and AUC.")

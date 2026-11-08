@@ -78,7 +78,7 @@ class IntegrationTests(unittest.TestCase):
         self.assertFalse(app.exception)
         self.assertFalse(app.error)
         for name in MODEL_FILES:
-            app.sidebar.selectbox[0].select(name).run()
+            app.selectbox(key="classifier").select(name).run()
             self.assertFalse(app.exception)
             self.assertEqual(len(app.metric), 6)
             x, y = validate_dataset(self.frame, self.models[name].feature_names_in_)
