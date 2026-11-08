@@ -1,39 +1,43 @@
-# Work plan
+# Git and VM workflow
 
-1. Run dataset preparation and inspect the feature names, class balance and split.
-2. Explain the problem and dataset in your own README wording.
-3. Implement evaluation.py. Decide whether malignant (0) or benign (1) is positive;
-   probability-column selection must match that choice.
-4. Implement train.py. Save preprocessing with each estimator as one pipeline.
-5. Run training. Fill the README comparison using actual results. Explain errors
-   using the classification reports; avoid assuming why a model failed without evidence.
-6. Complete app.py: validation, saved-model loading, six metrics, confusion matrix
-   or classification report, and a comparison of the five models.
-7. Verify that app metrics on test_data.csv match the training evaluation.
-8. Try reordered columns, missing features, strings, NaN/infinity, empty CSV,
-   unknown labels, and single-class test data. Show actionable validation messages.
-9. Repeat execution on BITS Virtual Lab and capture genuine execution evidence.
-10. Pin the validated dependency versions, commit your work, and deploy.
+## On your computer
+Review the changes and measured results, then commit and push:
 
-## Concepts to be ready to explain
-- Why scaling is fitted only on training data.
-- Why stratification helps preserve class proportions.
-- Why AUC uses scores rather than predicted labels.
-- What a false negative means under your chosen positive class.
-- Why a single split cannot establish a universally best model.
-
-## Git workflow
-The local repository is initialized on main with no remote and no commits.
-
-```powershell
+```bash
 git status
 git add .
-git commit -m "Add dataset preparation and project learning scaffold"
-# Create an empty repository in your GitHub account, then replace YOUR_USER:
-git remote add origin https://github.com/YOUR_USER/ml-assignment-2.git
-git push -u origin main
+git commit -m "Implement classifier training and Streamlit evaluation"
+git push origin main
 ```
 
-Make meaningful commits as you implement and understand each stage.
-Do not fabricate historical commits. Do not commit credentials or another
-student's PDF. Saved models and test_data.csv must be committed for deployment.
+The environment directory is ignored; model files and results are intentionally tracked.
+
+## In BITS Virtual Lab
+Stop the old Streamlit process with Ctrl+C. From your cloned repository:
+
+```bash
+git status
+git pull --ff-only
+python -m pip install -r requirements.txt
+python prepare_data.py
+python train.py
+python -m unittest discover -s tests -v
+python -m streamlit run app.py
+```
+
+If Git reports local changes that would be overwritten, preserve them in a commit
+or stash before pulling. Do not reset or discard your work blindly.
+Open http://localhost:8501, select each classifier, inspect comparison results,
+and upload the bundled test CSV to verify the same metrics. Capture genuine lab
+execution evidence. Running training updates model artifacts, results and the README;
+commit and push those lab outputs if they are the versions you deploy and submit.
+
+## Understanding the implementation
+- Scaling is learned from training rows only and travels with each saved model.
+- Stratification preserves class proportions; test rows never enter fitting.
+- Malignant (0) is positive, so AUC uses probability for class 0.
+- A false negative is an actual malignant sample predicted benign.
+- The F1-based winner is specific to this split; no clinical claims are made.
+- Model persistence requires matching versions; the app verifies numerical dependencies.
+
+Finally deploy to Streamlit Community Cloud and finish the submission checklist.

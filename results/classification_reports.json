@@ -1,0 +1,217 @@
+{
+  "Logistic Regression": {
+    "confusion_matrix": [
+      [
+        41,
+        1
+      ],
+      [
+        1,
+        71
+      ]
+    ],
+    "label_order": [
+      "Malignant",
+      "Benign"
+    ],
+    "classification_report": {
+      "Malignant": {
+        "precision": 0.9761904761904762,
+        "recall": 0.9761904761904762,
+        "f1-score": 0.9761904761904762,
+        "support": 42.0
+      },
+      "Benign": {
+        "precision": 0.9861111111111112,
+        "recall": 0.9861111111111112,
+        "f1-score": 0.9861111111111112,
+        "support": 72.0
+      },
+      "accuracy": 0.9824561403508771,
+      "macro avg": {
+        "precision": 0.9811507936507937,
+        "recall": 0.9811507936507937,
+        "f1-score": 0.9811507936507937,
+        "support": 114.0
+      },
+      "weighted avg": {
+        "precision": 0.9824561403508771,
+        "recall": 0.9824561403508771,
+        "f1-score": 0.9824561403508771,
+        "support": 114.0
+      }
+    }
+  },
+  "Decision Tree": {
+    "confusion_matrix": [
+      [
+        42,
+        0
+      ],
+      [
+        1,
+        71
+      ]
+    ],
+    "label_order": [
+      "Malignant",
+      "Benign"
+    ],
+    "classification_report": {
+      "Malignant": {
+        "precision": 0.9767441860465116,
+        "recall": 1.0,
+        "f1-score": 0.9882352941176471,
+        "support": 42.0
+      },
+      "Benign": {
+        "precision": 1.0,
+        "recall": 0.9861111111111112,
+        "f1-score": 0.993006993006993,
+        "support": 72.0
+      },
+      "accuracy": 0.9912280701754386,
+      "macro avg": {
+        "precision": 0.9883720930232558,
+        "recall": 0.9930555555555556,
+        "f1-score": 0.99062114356232,
+        "support": 114.0
+      },
+      "weighted avg": {
+        "precision": 0.9914320685434516,
+        "recall": 0.9912280701754386,
+        "f1-score": 0.9912489986793391,
+        "support": 114.0
+      }
+    }
+  },
+  "KNN": {
+    "confusion_matrix": [
+      [
+        40,
+        2
+      ],
+      [
+        0,
+        72
+      ]
+    ],
+    "label_order": [
+      "Malignant",
+      "Benign"
+    ],
+    "classification_report": {
+      "Malignant": {
+        "precision": 1.0,
+        "recall": 0.9523809523809523,
+        "f1-score": 0.975609756097561,
+        "support": 42.0
+      },
+      "Benign": {
+        "precision": 0.972972972972973,
+        "recall": 1.0,
+        "f1-score": 0.9863013698630136,
+        "support": 72.0
+      },
+      "accuracy": 0.9824561403508771,
+      "macro avg": {
+        "precision": 0.9864864864864865,
+        "recall": 0.9761904761904762,
+        "f1-score": 0.9809555629802873,
+        "support": 114.0
+      },
+      "weighted avg": {
+        "precision": 0.9829302987197724,
+        "recall": 0.9824561403508771,
+        "f1-score": 0.9823623542652152,
+        "support": 114.0
+      }
+    }
+  },
+  "Naive Bayes": {
+    "confusion_matrix": [
+      [
+        40,
+        2
+      ],
+      [
+        0,
+        72
+      ]
+    ],
+    "label_order": [
+      "Malignant",
+      "Benign"
+    ],
+    "classification_report": {
+      "Malignant": {
+        "precision": 1.0,
+        "recall": 0.9523809523809523,
+        "f1-score": 0.975609756097561,
+        "support": 42.0
+      },
+      "Benign": {
+        "precision": 0.972972972972973,
+        "recall": 1.0,
+        "f1-score": 0.9863013698630136,
+        "support": 72.0
+      },
+      "accuracy": 0.9824561403508771,
+      "macro avg": {
+        "precision": 0.9864864864864865,
+        "recall": 0.9761904761904762,
+        "f1-score": 0.9809555629802873,
+        "support": 114.0
+      },
+      "weighted avg": {
+        "precision": 0.9829302987197724,
+        "recall": 0.9824561403508771,
+        "f1-score": 0.9823623542652152,
+        "support": 114.0
+      }
+    }
+  },
+  "Support Vector Machine": {
+    "confusion_matrix": [
+      [
+        42,
+        0
+      ],
+      [
+        0,
+        72
+      ]
+    ],
+    "label_order": [
+      "Malignant",
+      "Benign"
+    ],
+    "classification_report": {
+      "Malignant": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 42.0
+      },
+      "Benign": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 72.0
+      },
+      "accuracy": 1.0,
+      "macro avg": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 114.0
+      },
+      "weighted avg": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 114.0
+      }
+    }
+  }
+}

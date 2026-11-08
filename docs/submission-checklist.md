@@ -26,6 +26,6 @@ Assignment deadline stated in the brief: 8 November 2026, 23:59.
 3. Screenshot of your assignment execution on BITS Virtual Lab.
 4. Your complete final README content.
 
-Replace every TODO, check all links, and explicitly submit the final file.
-The starter is not a completed submission. No execution evidence, results,
-GitHub link or deployed app has been generated for you.
+Add the live app URL, check all links, and explicitly submit the final file.
+The code and local evaluation are implemented. Your GitHub URL is recorded.
+BITS Lab execution evidence, deployment and the final submission PDF remain your steps.

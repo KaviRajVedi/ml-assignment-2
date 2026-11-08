@@ -1,0 +1,10 @@
+{
+  "rows": 569,
+  "features": 30,
+  "missing_values": 0,
+  "duplicate_rows": 0,
+  "class_counts": {
+    "0": 212,
+    "1": 357
+  }
+}

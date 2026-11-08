@@ -1,0 +1,59 @@
+{
+  "python": "3.14.5",
+  "packages": {
+    "scikit-learn": "1.9.0",
+    "numpy": "2.5.2",
+    "pandas": "3.0.5",
+    "scipy": "1.18.1",
+    "joblib": "1.6.0",
+    "streamlit": "1.67.0"
+  },
+  "seed": 17,
+  "positive_class": 0,
+  "features": [
+    "mean radius",
+    "mean texture",
+    "mean perimeter",
+    "mean area",
+    "mean smoothness",
+    "mean compactness",
+    "mean concavity",
+    "mean concave points",
+    "mean symmetry",
+    "mean fractal dimension",
+    "radius error",
+    "texture error",
+    "perimeter error",
+    "area error",
+    "smoothness error",
+    "compactness error",
+    "concavity error",
+    "concave points error",
+    "symmetry error",
+    "fractal dimension error",
+    "worst radius",
+    "worst texture",
+    "worst perimeter",
+    "worst area",
+    "worst smoothness",
+    "worst compactness",
+    "worst concavity",
+    "worst concave points",
+    "worst symmetry",
+    "worst fractal dimension"
+  ],
+  "train_rows": 455,
+  "test_rows": 114,
+  "train_class_counts": {
+    "0": 170,
+    "1": 285
+  },
+  "test_class_counts": {
+    "0": 42,
+    "1": 72
+  },
+  "data_sha256": {
+    "train_data.csv": "0c34948d6d0d23d4716f362792e3fc1b253813930df34463e8260477e309d112",
+    "test_data.csv": "b11ad59d1fa5cac436e4d0eb86dc85d09b10564155e4f8b0851d3f52961f6fa4"
+  }
+}
