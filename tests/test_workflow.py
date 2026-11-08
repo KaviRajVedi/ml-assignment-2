@@ -84,7 +84,7 @@ class IntegrationTests(unittest.TestCase):
             x, y = validate_dataset(self.frame, self.models[name].feature_names_in_)
             expected = evaluate_classifier(self.models[name], x, y)
             self.assertEqual([item.value for item in app.metric], [f"{v:.4f}" for v in expected.values()])
-        app.sidebar.checkbox[0].uncheck().run()
+        app.checkbox(key="use_sample").uncheck().run()
         self.assertFalse(app.exception)
         self.assertEqual(len(app.metric), 0)
 
@@ -116,7 +116,7 @@ class IntegrationTests(unittest.TestCase):
             with self.subTest(label=label), patch.object(
                 pd.DataFrame, "style", new_callable=PropertyMock,
                 side_effect=AttributeError("The '.style' accessor requires jinja2")
-            ), patch("streamlit.delta_generator.DeltaGenerator.file_uploader",
+            ), patch("streamlit.file_uploader",
                      return_value=io.BytesIO(frame.to_csv(index=False).encode())):
                 app = AppTest.from_file(str(ROOT / "app.py"), default_timeout=60).run()
                 self.assertFalse(app.exception)
@@ -134,12 +134,12 @@ class IntegrationTests(unittest.TestCase):
                    (b"a,target\n1,0", "Missing"),
                    (b"", "Invalid")]
         for data, expected in uploads:
-            with self.subTest(expected=expected), patch("streamlit.delta_generator.DeltaGenerator.file_uploader", return_value=io.BytesIO(data)):
+            with self.subTest(expected=expected), patch("streamlit.file_uploader", return_value=io.BytesIO(data)):
                 app = AppTest.from_file(str(ROOT / "app.py"), default_timeout=60).run()
                 self.assertFalse(app.exception)
                 self.assertTrue(any(expected in item.value for item in app.error))
         data = self.frame[self.frame.target == 1].to_csv(index=False).encode()
-        with patch("streamlit.delta_generator.DeltaGenerator.file_uploader", return_value=io.BytesIO(data)):
+        with patch("streamlit.file_uploader", return_value=io.BytesIO(data)):
             app = AppTest.from_file(str(ROOT / "app.py"), default_timeout=60).run()
             self.assertFalse(app.exception)
             self.assertFalse(app.error)

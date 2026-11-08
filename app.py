@@ -10,26 +10,33 @@ from sklearn.metrics import classification_report, confusion_matrix
 from config import ROOT, MODEL_FILES, LABELS, CLASS_NAMES
 from evaluation import validate_dataset, evaluate_classifier, positive_probability
 
-st.set_page_config(page_title="Tumour Classification Lab", page_icon=":microscope:", layout="wide")
-st.title("Tumour Classification Lab")
-st.caption("Machine Learning Assignment 2 | Wisconsin Diagnostic dataset")
-st.info("Educational model comparison. Positive class: malignant (0); benign: 1. Not for clinical use.")
-st.markdown("Explore the dataset, compare five classifiers, and understand their predictions on held-out samples.")
-st.sidebar.title("Evaluation controls")
-choice = st.selectbox("Classifier", list(MODEL_FILES), key="classifier", help="Choose the model shown in Model evaluation. The comparison includes all five models.")
-upload = st.sidebar.file_uploader("Upload test CSV (features + target)", type=["csv"])
-use_sample = st.sidebar.checkbox("Use bundled test data when no CSV is uploaded", value=True)
-bundled = ROOT / "test_data.csv"
-if bundled.exists():
-    st.sidebar.download_button("Download test CSV", bundled.read_bytes(), "test_data.csv", "text/csv")
-st.sidebar.caption("Uploads take priority. All models are compared on the same selected rows.")
-st.sidebar.divider()
-st.sidebar.markdown("**Project links**")
-st.sidebar.link_button("GitHub repository", "https://github.com/KaviRajVedi/ml-assignment-2")
-st.sidebar.link_button("UCI dataset", "https://archive.ics.uci.edu/dataset/17/breast+cancer+wisconsin+diagnostic")
-with st.sidebar.expander("CSV requirements"):
-    st.write("Include all 30 numeric features and target: 0 = malignant, 1 = benign. Column order may vary; extra columns are ignored.")
-    st.write("No missing or infinite values. Maximum 10 MB and 10,000 rows. Upload held-out data only.")
+st.set_page_config(page_title="Kavi Raj | Classification Study", page_icon=":seedling:", layout="wide")
+st.markdown("<style>" + (ROOT / "design.css").read_text(encoding="utf-8") + "</style>", unsafe_allow_html=True)
+st.markdown("""<header class="project-masthead">
+<div class="eyebrow">Machine Learning / Assignment 02</div>
+<h1>A closer look at classification</h1>
+<p>Five approaches to one question: how well can cell measurements distinguish malignant and benign samples?</p>
+<div class="byline">Kavi Raj &nbsp; / &nbsp; 2026AJ05171 &nbsp; / &nbsp; Wisconsin Diagnostic dataset</div>
+</header>""", unsafe_allow_html=True)
+control_left, control_right = st.columns([2, 1])
+with control_left:
+    choice = st.selectbox("Choose a classifier", list(MODEL_FILES), key="classifier",
+                          help="Used in the Results section. Compare always includes all five models.")
+with control_right:
+    st.caption("Reading the results")
+    st.write("**Malignant = 0** | **Benign = 1**")
+    st.caption("Educational study; not for clinical use.")
+with st.expander("Test data | Upload a CSV or use the included samples", expanded=False):
+    upload_left, upload_right = st.columns([2, 1])
+    with upload_left:
+        upload = st.file_uploader("Upload test CSV (features + target)", type=["csv"])
+        use_sample = st.checkbox("Use bundled test data when no CSV is uploaded", value=True, key="use_sample")
+    bundled = ROOT / "test_data.csv"
+    with upload_right:
+        if bundled.exists():
+            st.download_button("Download test CSV", bundled.read_bytes(), "test_data.csv", "text/csv")
+        st.caption("Include all 30 numeric features and target (0 or 1). No missing or infinite values. Limit: 10 MB / 10,000 rows.")
+    st.caption("Uploads take priority. All models evaluate the same rows. No model is trained on uploaded data.")
 
 metadata_path = ROOT / "model/metadata.json"
 missing = [filename for filename in MODEL_FILES.values() if not (ROOT / "model" / filename).exists()]
@@ -86,7 +93,7 @@ if target.nunique() < 2:
     st.warning("Only one class is present: AUC and MCC are shown as N/A. Other metrics describe this subset only.")
 st.caption("Precision, recall and F1 refer to malignant cases. Undefined precision/recall/F1 are reported as 0.")
 overview_tab, evaluation_tab, comparison_tab, data_tab, guide_tab = st.tabs(
-    ["Project overview", "Model evaluation", "Compare all five", "Explore test data", "Methods and README"])
+    ["Overview", "Results", "Compare", "Data", "Study notes"])
 with overview_tab:
     st.subheader("From cell measurements to a classification")
     st.write("The task is to distinguish malignant and benign breast tumour samples using measurements of cell nuclei from digitized fine-needle aspirate images. Five supervised classifiers are evaluated on the same held-out partition.")
@@ -98,11 +105,11 @@ with overview_tab:
             st.caption(title)
             st.subheader(value)
             st.caption(description)
-    st.success("Dataset requirements met: 569 total instances exceed the minimum of 500, and 30 features exceed the minimum of 12. The 114 rows in the app are the test partition, not the full dataset.")
+    st.caption("Dataset requirements met: 569 total instances exceed the minimum of 500, and 30 features exceed the minimum of 12. The 114 rows in the app are the test partition, not the full dataset.")
     left, right = st.columns(2)
     with left:
         st.markdown("#### How to use this app")
-        st.markdown("1. Use the bundled test data or upload a labeled test CSV.\n2. Pick a classifier using the dropdown above.\n3. Open **Model evaluation** for scores and mistakes.\n4. Use **Compare all five** to compare the same input rows.\n5. Inspect every sample in **Explore test data**.")
+        st.markdown("1. Use the bundled test data or upload a labeled test CSV.\n2. Pick a classifier using the dropdown above.\n3. Open **Results** for scores and mistakes.\n4. Use **Compare** to compare the same input rows.\n5. Inspect every sample in **Data**.")
     with right:
         st.markdown("#### What the labels mean")
         st.write("**0 - Malignant:** the positive class for precision, recall, F1 and AUC.")
@@ -115,7 +122,7 @@ with overview_tab:
 with evaluation_tab:
     st.subheader(choice)
     st.caption("Scores below are calculated from the current CSV, with malignant as the positive class.")
-    for column, (metric, value) in zip(st.columns(6), comparison.loc[choice].items()):
+    for column, (metric, value) in zip(st.columns(3) + st.columns(3), comparison.loc[choice].items()):
         column.metric(metric, "N/A" if pd.isna(value) else f"{value:.4f}")
     predictions = models[choice].predict(features)
     matrix = confusion_matrix(target, predictions, labels=LABELS)
@@ -172,7 +179,7 @@ with comparison_tab:
         with st.expander(name):
             st.write(f"Accuracy {values['Accuracy']:.4f}; malignant recall {values['Recall']:.4f}; F1 {values['F1']:.4f}.")
             st.write(f"Missed {errors[0, 1]} of {errors[0].sum()} malignant cases and flagged {errors[1, 0]} of {errors[1].sum()} benign cases as malignant.")
-            st.caption("Model assumptions and fixed settings are described in Methods and README.")
+            st.caption("Model assumptions and fixed settings are described in Study notes.")
 with data_tab:
     st.subheader("Every test sample, available to inspect")
     st.caption("The table includes the full current test CSV, not just a preview. Display filters below do not change evaluation metrics or model comparisons.")
@@ -238,3 +245,7 @@ with guide_tab:
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
         st.markdown(readme)
         st.download_button("Download README", readme, "README.md", "text/markdown")
+
+st.divider()
+st.caption("Kavi Raj / Machine Learning Assignment 2 / Reproducible classification study")
+st.markdown("[Source code](https://github.com/KaviRajVedi/ml-assignment-2) | [Dataset source](https://archive.ics.uci.edu/dataset/17/breast+cancer+wisconsin+diagnostic)")
